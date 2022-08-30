@@ -1,6 +1,8 @@
 from email.mime import application
 from glob import glob
 import imp
+from tkinter.ttk import Label
+
 import cv2
 import os
 from keras.models import load_model
@@ -26,7 +28,7 @@ tiempo = 0
 #Para reproducir la alarma cuando se duermen
 mixer.init()
 #Cancion por defecto AC/DC
-sound = mixer.Sound('alarm.wav')
+sound = mixer.Sound('Música/alarm.wav')
 
 #Utilizamos opencv con cascadeClassifier
 face = cv2.CascadeClassifier('haar cascade files/haarcascade_frontalface_alt.xml')
@@ -37,7 +39,7 @@ tiempo  = 0
 
 lbl=['Close','Open']
 
-model = load_model('models/cnncat2.h5')
+model = load_model('models/CNNdeteccion.h5')
 path = os.getcwd()
 cap = cv2.VideoCapture(0)
 font = cv2.FONT_HERSHEY_COMPLEX_SMALL
@@ -58,7 +60,7 @@ class Editor(tk.Tk):
         super().__init__()
         
         self.iconbitmap('imagenes/icon.ico')
-        self.title('Detección de Somnolencia')
+        self.title('Detección de Somnolencia y Desconcentración')
         # Configuración tamaño mínimo de la venta
         self.rowconfigure(0, minsize=600, weight=1)
         # Configuración mínima de la segunda columna
@@ -78,20 +80,47 @@ class Editor(tk.Tk):
         self.ventana_nuevo.mainloop()
 
     def ventana_sonido(self):
+
+    # self.ventana_nuevo = tk.Toplevel()
+    # self.ventana_nuevo.title('Ajuste de Sonido')
+    # self.ventana_nuevo.resizable(width=False, height=False)
+    # self.ventana_nuevo.iconbitmap('imagenes/son.ico')
+    # self.ventana_nuevo.geometry('400x300')
+    # self.imag8 = ImageTk.PhotoImage(Image.open('imagenes/fondosonido.jpg'))
+    # lbl= tk.Label(self.ventana_nuevo,image=self.imag8).place(x=0, y=0)
+    # self.imag7 = tk.PhotoImage(file='imagenes/subir.png')
+    # texto = tk.StringVar()
+    # texto.set("Un nuevo texto")
+    # #entrada para sonido
+
+    # label=tk.Label(self.ventana_nuevo, textvariable=texto)
+    # boton_Cambiar.grid(row=0, column=0, sticky='we')
+    # e1 = tk.Entry(self.ventana_nuevo, bg='gray').place(x=25 , y = 40)
+    # boton_sonido = tk.Button(self.ventana_nuevo,text='SUBIR').place(x=25,y=35)
+    #
+    # self.ventana_nuevo.mainloop()
+
         self.ventana_nuevo = tk.Toplevel()
         self.ventana_nuevo.title('Ajuste de Sonido')
         self.ventana_nuevo.resizable(width=False, height=False)
         self.ventana_nuevo.iconbitmap('imagenes/son.ico')
-        self.ventana_nuevo.geometry('400x300')
+        self.ventana_nuevo.geometry('560x287')
         imag4 = ImageTk.PhotoImage(Image.open('imagenes/fondosonido.jpg'))
         lbl= tk.Label(self.ventana_nuevo,image=imag4).place(x=0, y=0)
+        lbl = tk.Label(self.ventana_nuevo, text='Subir sonido',bg='pink').place(x=0, y=0)
         #entrada para sonido
-        boton_Cambiar = tk.Button(self.ventana_nuevo, text='Home', image=self.imag7,command=self.cambiar_Sonido,height=112, width=150, bg='black',bd=0, relief=tk.GROOVE).place(x=100,y=100)
-        boton_Cambiar.grid(row=0, column=0, sticky='we')
-        e1 = tk.Entry(self.ventana_nuevo, bg='gray').place(x=25 , y = 40)
-        boton_sonido = tk.Button(self.ventana_nuevo,text='SUBIR').place(x=25,y=35)
-        self.ventana_nuevo.mainloop()
+        self.imag7 = tk.PhotoImage(file='imagenes/subir.png')
+        boton_Cambiar = tk.Button(self.ventana_nuevo, text='Home', image=self.imag7, command=self.cambiar_Sonido,
+                               height=125, width=130, bg='white', bd=0).place(x=10, y=25)
+        lbl = tk.Label(self.ventana_nuevo, text='Elegir sonido', bg='pink').place(x=0, y=150)
+        #Botones para las canciones
+        boton_musica1 = tk.Button(self.ventana_nuevo, text='Sound 1',command=self.cambiar_Sonidos1()).place(x=0, y=174)
+        boton_musica2 = tk.Button(self.ventana_nuevo, text='Sound 2',command=self.cambiar_Sonidos2()).place(x=0,y=198)
+        boton_musica3 = tk.Button(self.ventana_nuevo, text='Sound 3',command=self.cambiar_Sonidos3()).place(x=0, y=222)
+        boton_musica4 = tk.Button(self.ventana_nuevo, text='Sound 4',command=self.cambiar_Sonidos4()).place(x=0, y=246)
 
+        self.ventana_nuevo.mainloop()
+    #Sonidos
     def cambiar_Sonido(self):
         ventana = SeleccionArchivoVentana()
         print("ESCOGE CANCION")
@@ -99,9 +128,24 @@ class Editor(tk.Tk):
         print("SONIDO ",sonido)
         global sound
         sound = mixer.Sound(sonido)
+    def cambiar_Sonidos1(self):
+        sound1 = mixer.Sound('Música/Sound1.wav')
+        sound1 = mixer.Sound(sound1)
+        sound1.play()
+    def cambiar_Sonidos2(self):
+        sound2 = mixer.Sound('Música/Sound2.mp3')
+        sound2 = mixer.Sound(sound2)
+        sound2.play()
+    def cambiar_Sonidos3(self):
+        sound3 = mixer.Sound('Música/Sound3.mp3')
+        sound3 = mixer.Sound(sound3)
+        sound3.play()
+    def cambiar_Sonidos4(self):
+        sound4 = mixer.Sound('Música/Sound4.mp3')
+        sound = mixer.Sound(sound4)
+        sound.play()
 
-
-
+    #Componentes
     def _crear_componentes(self):
 
         frame_botones = tk.Frame(self, relief=tk.RAISED, bd=2,bg='black')
@@ -150,7 +194,7 @@ class Editor(tk.Tk):
             left_eye = leye.detectMultiScale(gray)
             right_eye =  reye.detectMultiScale(gray)
 
-            cv2.rectangle(frame, (0,height-50) , (200,height) , (0,0,0) , thickness=cv2.FILLED )
+            cv2.rectangle(frame, (0,height-50) , (650,height) , (0,0,0) , thickness=cv2.FILLED )
 
             for (x,y,w,h) in faces:
                 cv2.rectangle(frame, (x,y) , (x+w,y+h) , (100,100,100) , 1 )
@@ -166,9 +210,9 @@ class Editor(tk.Tk):
                 r_eye = np.expand_dims(r_eye,axis=0)
                 rpred = model.predict_classes(r_eye)
                 if(rpred[0]==1):
-                    lbl='Open' 
+                    lbl='Abierto'
                 if(rpred[0]==0):
-                    lbl='Closed'
+                    lbl='Cerrado'
                 break
 
             for (x,y,w,h) in left_eye:
@@ -183,32 +227,41 @@ class Editor(tk.Tk):
                 l_eye = np.expand_dims(l_eye,axis=0)
                 lpred = model.predict_classes(l_eye)
                 if(lpred[0]==1):
-                    lbl='Open'   
+                    lbl='Abierto'
                 if(lpred[0]==0):
-                    lbl='Closed'
+                    lbl='Cerrado'
                 break
 
             global score
             if(rpred[0]==0 and lpred[0]==0):
                 
                 score=score+1
-                cv2.putText(frame,"Closed",(10,height-20), font, 1,(255,255,255),1,cv2.LINE_AA)
+                cv2.putText(frame,"Cerrado",(10,height-20), font, 1,(255,255,255),1,cv2.LINE_AA)
             # if(rpred[0]==1 or lpred[0]==1):
             else:
                 
                 score=score-1
-                cv2.putText(frame,"Open",(10,height-20), font, 1,(255,255,255),1,cv2.LINE_AA)
+                cv2.putText(frame,"Abierto",(10,height-20), font, 1,(255,255,255),1,cv2.LINE_AA)
             
                 
             if(score<0):
                 global reproduciendo
                 reproduciendo=False
                 score=0   
-            cv2.putText(frame,'Score:'+str(score),(100,height-20), font, 1,(255,255,255),1,cv2.LINE_AA)
+            cv2.putText(frame,'Conteo:'+str(score),(150,height-20), font, 1,(255,255,255),1,cv2.LINE_AA)
+            #Calculo para la desconcetracion (mejorar el calculo)
+            cv2.putText(frame, 'Desconcetracion:', (300, height - 20), font, 1, (255, 255, 255), 1, cv2.LINE_AA)
+
+            if (score > 5 and rpred[0]==0 and lpred[0]==0):
+                cv2.putText(frame, "No atiende", (504, height - 20), font, 1, (255, 255, 255), 1, cv2.LINE_AA)
+
+            else:
+                cv2.putText(frame, "Atiende", (504, height - 20), font, 1, (255, 255, 255), 1, cv2.LINE_AA)
+
             global thicc
-            
-            if(score>15):
-                #person is feeling sleepy so we beep the alarm
+
+            if(score>20):
+
                 cv2.imwrite(os.path.join(path,'image.jpg'),frame)
                 try:
                     print("INTENTANDO")
@@ -222,7 +275,7 @@ class Editor(tk.Tk):
 
 
                 
-                except:  # isplaying = False
+                except:
                     pass
                 if(thicc<16):
                     thicc= thicc+2
@@ -230,7 +283,7 @@ class Editor(tk.Tk):
                     thicc=thicc-2
                     if(thicc<2):
                         thicc=2
-                cv2.rectangle(frame,(0,0),(width,height),(0,0,255),thicc) 
+                cv2.rectangle(frame,(0,0),(width,height),(0,0,255),thicc)
             
             frame = imutils.resize(frame, width=640)
             frame = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)

@@ -30,23 +30,22 @@ model = Sequential([
     MaxPooling2D(pool_size=(1,1)),
     Conv2D(32,(3,3),activation='relu'),
     MaxPooling2D(pool_size=(1,1)),
-#32 convolution filters used each of size 3x3
+#32 filtros de convolución utilizados cada uno de tamaño 3x3
 #again
     Conv2D(64, (3, 3), activation='relu'),
     MaxPooling2D(pool_size=(1,1)),
 
-#64 convolution filters used each of size 3x3
-#choose the best features via pooling
+ #Filtros de convolución 64 usados cada uno de tamaño 3x3
+#elegir las mejores funciones a través de la agrupación
     
-#randomly turn neurons on and off to improve convergence
+#enciende y apaga aleatoriamente las neuronas para mejorar la convergencia
     Dropout(0.25),
-#flatten since too many dimensions, we only want a classification output
+#usamos Flatten ya que demasiadas dimensiones, solo queremos una salida de clasificación
     Flatten(),
-#fully connected to get all relevant data
+#Obteniendo datos relavantes
     Dense(128, activation='relu'),
-#one more dropout for convergence' sake :) 
     Dropout(0.5),
-#output a softmax to squash the matrix into output probabilities
+#Usamos softmax para la matriz en probabilidades de salida
     Dense(2, activation='softmax')
 ])
 
@@ -54,4 +53,4 @@ model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=['accurac
 
 model.fit_generator(train_batch, validation_data=valid_batch,epochs=15,steps_per_epoch=SPE ,validation_steps=VS)
 
-model.save('models/cnnCat2.h5', overwrite=True)
+model.save('models/CNNdeteccion.h5', overwrite=True)
