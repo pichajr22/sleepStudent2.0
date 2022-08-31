@@ -118,9 +118,39 @@ class Editor(tk.Tk):
         boton_musica2 = tk.Button(self.ventana_nuevo, text='"We will rock you',command=self.cambiar_Sonidos2).place(x=0,y=198)
         boton_musica3 = tk.Button(self.ventana_nuevo, text='Alarma',command=self.cambiar_Sonidos3).place(x=0, y=222)
         boton_musica4 = tk.Button(self.ventana_nuevo, text='Avengers',command=self.cambiar_Sonidos4).place(x=0, y=246)
-        
-
         self.ventana_nuevo.mainloop()
+
+#VENTANA PARA MAESTRO
+    def ventana_Master(self):
+        self.ventana_nuevo = tk.Toplevel()
+        self.ventana_nuevo.title('Master')
+        self.ventana_nuevo.resizable(width=False, height=False)
+        self.ventana_nuevo.iconbitmap('imagenes/son.ico')
+        self.ventana_nuevo.geometry('400x300')
+        imag4 = ImageTk.PhotoImage(Image.open('imagenes/fondoMaster.jpg'))
+        lbl= tk.Label(self.ventana_nuevo,image=imag4).place(x=0, y=0)
+        #entrada para sonido
+        boton_Cambiar = tk.Button(self.ventana_nuevo, text='Home', image=self.imag7,command=self.cambiar_Sonido,height=112, width=150, bg='black',bd=0, relief=tk.GROOVE).place(x=100,y=100)
+        boton_Cambiar.grid(row=0, column=0, sticky='we')
+        e1 = tk.Entry(self.ventana_nuevo, bg='gray').place(x=25 , y = 40)
+        boton_sonido = tk.Button(self.ventana_nuevo,text='SUBIR').place(x=25,y=35)
+        self.ventana_nuevo.mainloop()
+
+    def ventana_Login(self):
+        self.ventana_nuevo = tk.Toplevel()
+        self.ventana_nuevo.title('Login')
+        self.ventana_nuevo.resizable(width=False, height=False)
+        self.ventana_nuevo.iconbitmap('imagenes/son.ico')
+        self.ventana_nuevo.geometry('400x300')
+        imag4 = ImageTk.PhotoImage(Image.open('imagenes/login.jpg'))
+        lbl= tk.Label(self.ventana_nuevo,image=imag4).place(x=0, y=0)
+        #entrada para sonido
+        boton_Cambiar = tk.Button(self.ventana_nuevo, text='Home', image=self.imag7,command=self.cambiar_Sonido,height=112, width=150, bg='black',bd=0, relief=tk.GROOVE).place(x=100,y=100)
+        boton_Cambiar.grid(row=0, column=0, sticky='we')
+        e1 = tk.Entry(self.ventana_nuevo, bg='gray').place(x=25 , y = 40)
+        boton_sonido = tk.Button(self.ventana_nuevo,text='SUBIR').place(x=25,y=35)
+        self.ventana_nuevo.mainloop()
+
     #Sonidos
     def cambiar_Sonido(self):
         ventana = SeleccionArchivoVentana()
