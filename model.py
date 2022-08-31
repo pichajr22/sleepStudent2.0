@@ -7,7 +7,10 @@ import random,shutil
 from keras.models import Sequential
 from keras.layers import Dropout,Conv2D,Flatten,Dense, MaxPooling2D, BatchNormalization
 from keras.models import load_model
-
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+#Ubicar la ejecución en la carpeta actual del proyecto
+print("UBICADO")
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def generator(dir, gen=image.ImageDataGenerator(rescale=1./255), shuffle=True,batch_size=1,target_size=(24,24),class_mode='categorical' ):
 
@@ -16,14 +19,14 @@ def generator(dir, gen=image.ImageDataGenerator(rescale=1./255), shuffle=True,ba
 BS= 32
 TS=(24,24)
 train_batch= generator('data/train',shuffle=True, batch_size=BS,target_size=TS)
-valid_batch= generator('data/valid',shuffle=True, batch_size=BS,target_size=TS)
+valid_batch= generator('data/test',shuffle=True, batch_size=BS,target_size=TS)
 SPE= len(train_batch.classes)//BS
 VS = len(valid_batch.classes)//BS
 print(SPE,VS)
+print("ADAWDADW")
 
-
-# img,labels= next(train_batch)
-# print(img.shape)
+img,labels= next(train_batch)
+print("IMAGEN",img.shape)
 
 model = Sequential([
     Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(24,24,1)),
@@ -46,11 +49,12 @@ model = Sequential([
     Dense(128, activation='relu'),
     Dropout(0.5),
 #Usamos softmax para la matriz en probabilidades de salida
-    Dense(2, activation='softmax')
+    Dense(4, activation='softmax')
+    
 ])
-
+print("ENTRENANDO")
 model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=['accuracy'])
-
+print("ENTRENANDOo")
 model.fit_generator(train_batch, validation_data=valid_batch,epochs=15,steps_per_epoch=SPE ,validation_steps=VS)
-
+print("ENTRENANDOssss")
 model.save('models/CNNdeteccion.h5', overwrite=True)

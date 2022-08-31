@@ -113,11 +113,12 @@ class Editor(tk.Tk):
         boton_Cambiar = tk.Button(self.ventana_nuevo, text='Home', image=self.imag7, command=self.cambiar_Sonido,
                                height=125, width=130, bg='white', bd=0).place(x=10, y=25)
         lbl = tk.Label(self.ventana_nuevo, text='Elegir sonido', bg='pink').place(x=0, y=150)
-        #Botones para las canciones
-        boton_musica1 = tk.Button(self.ventana_nuevo, text='Sound 1',command=self.cambiar_Sonidos1()).place(x=0, y=174)
-        boton_musica2 = tk.Button(self.ventana_nuevo, text='Sound 2',command=self.cambiar_Sonidos2()).place(x=0,y=198)
-        boton_musica3 = tk.Button(self.ventana_nuevo, text='Sound 3',command=self.cambiar_Sonidos3()).place(x=0, y=222)
-        boton_musica4 = tk.Button(self.ventana_nuevo, text='Sound 4',command=self.cambiar_Sonidos4()).place(x=0, y=246)
+                #Botones para las canciones
+        boton_musica1 = tk.Button(self.ventana_nuevo, text='Smallville',command=self.cambiar_Sonidos1).place(x=0, y=174)
+        boton_musica2 = tk.Button(self.ventana_nuevo, text='"We will rock you',command=self.cambiar_Sonidos2).place(x=0,y=198)
+        boton_musica3 = tk.Button(self.ventana_nuevo, text='Alarma',command=self.cambiar_Sonidos3).place(x=0, y=222)
+        boton_musica4 = tk.Button(self.ventana_nuevo, text='Avengers',command=self.cambiar_Sonidos4).place(x=0, y=246)
+        
 
         self.ventana_nuevo.mainloop()
     #Sonidos
@@ -128,22 +129,23 @@ class Editor(tk.Tk):
         print("SONIDO ",sonido)
         global sound
         sound = mixer.Sound(sonido)
+
     def cambiar_Sonidos1(self):
-        sound1 = mixer.Sound('Música/Sound1.wav')
-        sound1 = mixer.Sound(sound1)
-        sound1.play()
+        global sound
+        sound = mixer.Sound('Música/Sound1.wav')
+        print("CAMBIO")
+
     def cambiar_Sonidos2(self):
-        sound2 = mixer.Sound('Música/Sound2.mp3')
-        sound2 = mixer.Sound(sound2)
-        sound2.play()
+        global sound
+        sound = mixer.Sound('Música/Sound2.mp3')
+
     def cambiar_Sonidos3(self):
-        sound3 = mixer.Sound('Música/Sound3.mp3')
-        sound3 = mixer.Sound(sound3)
-        sound3.play()
+        global sound
+        sound = mixer.Sound('Música/Sound3.mp3')
+
     def cambiar_Sonidos4(self):
-        sound4 = mixer.Sound('Música/Sound4.mp3')
-        sound = mixer.Sound(sound4)
-        sound.play()
+        global sound
+        sound = mixer.Sound('Música/Sound4.mp3')
 
     #Componentes
     def _crear_componentes(self):
@@ -172,6 +174,8 @@ class Editor(tk.Tk):
 
     def detener(self):
         global reproducir
+        global score
+        score=0
         reproducir=False
         sound.stop()
         
@@ -181,7 +185,6 @@ class Editor(tk.Tk):
         etiq_de_video = tk.Label(self, bg="black")
         etiq_de_video.place(x=200,y=75)
         if(reproducir==True):
-            print("HOLA")
             global rpred
             global lpred
             global video
