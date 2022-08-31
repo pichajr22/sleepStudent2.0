@@ -268,7 +268,7 @@ class Editor(tk.Tk):
                 global base
                 sql='UPDATE '+'"Attention"'+"set"+ '"attentionSlave"='+"'Si' WHERE "+'"idAttention"=%d'
                 
-                base.execute(sql%1)
+                base.execute(sql%3)
                 print("CMABIO")
                 
                 conn.commit()
@@ -305,7 +305,7 @@ class Editor(tk.Tk):
                         conn.commit()
                         
                         sql='SELECT * FROM '+'"Attention"'+"where"+ '"idAttention"='+"%d"
-                        base.execute(sql%1)
+                        base.execute(sql%3)
                         user=base.fetchone()
                         print("USUARIO: ",user)
                         base.execute(sql%3)
