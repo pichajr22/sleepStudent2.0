@@ -2,29 +2,27 @@ from email.mime import application
 from glob import glob
 import imp
 from tkinter.ttk import Label
-
 import cv2
 import os
 from keras.models import load_model
 import numpy as np
 from pygame import mixer
-import time
-import os
 from timeit import default_timer
-
+from tkinter import *
 from PIL import Image, ImageTk
 import tkinter as tk
 import imutils
 from Musica import *
+from Login import *
+from Master import *
+
 os.path.dirname(sys.executable)
 application_path = os.path.dirname(sys.executable)
 #Ubicar la ejecución en la carpeta actual del proyecto
 print("UBICADO")
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-video= cv2.VideoCapture(0)
 reproducir=True
 tiempo = 0
-
 #Para reproducir la alarma cuando se duermen
 mixer.init()
 #Cancion por defecto AC/DC
@@ -35,13 +33,13 @@ face = cv2.CascadeClassifier('haar cascade files/haarcascade_frontalface_alt.xml
 leye = cv2.CascadeClassifier('haar cascade files/haarcascade_lefteye_2splits.xml')
 reye = cv2.CascadeClassifier('haar cascade files/haarcascade_righteye_2splits.xml')
 tiempo  = 0
-
-
+conn = psycopg2.connect(database="vdtlugyl", user="vdtlugyl", password="MtgLesCauzESzl9MzklRMh2mzS7OZLzS", host="satao.db.elephantsql.com", port="5432")
+base=conn.cursor()
 lbl=['Close','Open']
 
 model = load_model('models/CNNdeteccion.h5')
 path = os.getcwd()
-cap = cv2.VideoCapture(0)
+
 font = cv2.FONT_HERSHEY_COMPLEX_SMALL
 count=0
 score=0
@@ -50,15 +48,17 @@ thicc=2
 rpred=[99]
 lpred=[99]
 reproduciendo=False
+iniciado=False
 
 
 
 class Editor(tk.Tk):
-
+    
+    print("Grabando")
 
     def __init__(self):
         super().__init__()
-        
+        self.video= cv2.VideoCapture(0)
         self.iconbitmap('imagenes/icon.ico')
         self.title('Detección de Somnolencia y Desconcentración')
         # Configuración tamaño mínimo de la venta
@@ -136,20 +136,6 @@ class Editor(tk.Tk):
         boton_sonido = tk.Button(self.ventana_nuevo,text='SUBIR').place(x=25,y=35)
         self.ventana_nuevo.mainloop()
 
-    def ventana_Login(self):
-        self.ventana_nuevo = tk.Toplevel()
-        self.ventana_nuevo.title('Login')
-        self.ventana_nuevo.resizable(width=False, height=False)
-        self.ventana_nuevo.iconbitmap('imagenes/son.ico')
-        self.ventana_nuevo.geometry('400x300')
-        imag4 = ImageTk.PhotoImage(Image.open('imagenes/login.jpg'))
-        lbl= tk.Label(self.ventana_nuevo,image=imag4).place(x=0, y=0)
-        #entrada para sonido
-        boton_Cambiar = tk.Button(self.ventana_nuevo, text='Home', image=self.imag7,command=self.cambiar_Sonido,height=112, width=150, bg='black',bd=0, relief=tk.GROOVE).place(x=100,y=100)
-        boton_Cambiar.grid(row=0, column=0, sticky='we')
-        e1 = tk.Entry(self.ventana_nuevo, bg='gray').place(x=25 , y = 40)
-        boton_sonido = tk.Button(self.ventana_nuevo,text='SUBIR').place(x=25,y=35)
-        self.ventana_nuevo.mainloop()
 
     #Sonidos
     def cambiar_Sonido(self):
@@ -179,7 +165,6 @@ class Editor(tk.Tk):
 
     #Componentes
     def _crear_componentes(self):
-
         frame_botones = tk.Frame(self, relief=tk.RAISED, bd=2,bg='black')
         self.img = tk.PhotoImage(file='imagenes/empezar.png')
         self.img2 = tk.PhotoImage(file='imagenes/parar.png')
@@ -217,8 +202,8 @@ class Editor(tk.Tk):
         if(reproducir==True):
             global rpred
             global lpred
-            global video
-            ret, frame = video.read()
+            
+            ret, frame = self.video.read()
             height,width = frame.shape[:2] 
 
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -279,6 +264,14 @@ class Editor(tk.Tk):
                 
             if(score<0):
                 global reproduciendo
+                global conn
+                global base
+                sql='UPDATE '+'"Attention"'+"set"+ '"attentionSlave"='+"'Si' WHERE "+'"idAttention"=%d'
+                
+                base.execute(sql%1)
+                print("CMABIO")
+                
+                conn.commit()
                 reproduciendo=False
                 score=0   
             cv2.putText(frame,'Conteo:'+str(score),(150,height-20), font, 1,(255,255,255),1,cv2.LINE_AA)
@@ -295,14 +288,31 @@ class Editor(tk.Tk):
 
             if(score>20):
 
+                
                 cv2.imwrite(os.path.join(path,'image.jpg'),frame)
                 try:
                     print("INTENTANDO")
                     if(reproduciendo == False):
                         print("REPRODUCIENDO")
+                        reproduciendo=True
                         sound.play()
                         
-                        reproduciendo=True
+                        sql='UPDATE '+'"Attention"'+"set"+ '"attentionSlave"='+"'NOOO' WHERE "+'"idAttention"=%d'
+                        
+                        base.execute(sql%3)
+                        print("CMABIO")
+                        
+                        conn.commit()
+                        
+                        sql='SELECT * FROM '+'"Attention"'+"where"+ '"idAttention"='+"%d"
+                        base.execute(sql%1)
+                        user=base.fetchone()
+                        print("USUARIO: ",user)
+                        base.execute(sql%3)
+                        user=base.fetchone()
+                        print("USUARIO: ",user)
+                        conn.commit()
+                        
                     else:
                         print("Ya se esta reproduciendo")
 
@@ -326,7 +336,7 @@ class Editor(tk.Tk):
             etiq_de_video.configure(image=image)
             etiq_de_video.image = image
             etiq_de_video.after(10,self.iniciar)
-            print(score)
+            
         else:
             etiq_de_video2 = ImageTk.PhotoImage(Image.open('imagenes/fondosonido.jpg'))
             etiq_de_video.place_forget()
@@ -338,5 +348,48 @@ class Editor(tk.Tk):
         reproducir=True
 
 if __name__ == '__main__':
-    editor = Editor()
-    editor.mainloop()
+    iniciado=True
+    page()
+    usuario=obtenerUsuario()
+    print("Usuario Iniciado",usuario)
+    sql='SELECT * FROM '+'"Slave"'+"where"+ '"userSlave"='+"'%s'"
+    base.execute(sql%usuario)
+    user=base.fetchone()
+    print("USUARIO: ",user)
+    sql='SELECT * FROM '+'"Master"'+"where"+ '"userMaster"='+"'%s'"
+    base.execute(sql%usuario)
+    master=base.fetchone()
+    print("MASTER: ",master)
+    tipoUsuario=""
+    if(user!= None):
+        tipoUser="slave"
+        print("ES UN ESCLAVO")
+        editor = Editor()
+        editor.mainloop()
+
+
+    
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

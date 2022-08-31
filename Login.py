@@ -1,13 +1,32 @@
 from tkinter import *
 from PIL import ImageTk, Image
-
+import os
+from urllib import robotparser
+import psycopg2
+from tkinter import messagebox as MessageBox
+from Master import *
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+tipoUser=''
+contra=''
+conn = psycopg2.connect(database="vdtlugyl", user="vdtlugyl", password="MtgLesCauzESzl9MzklRMh2mzS7OZLzS", host="satao.db.elephantsql.com", port="5432")
+base=conn.cursor()
+base.execute("select version()")
+row = base.fetchone()
+base.execute('Select * from "Master"')
+rows=base.fetchall()
+nombre=""
+id=0
+for row in rows:
+    nombre=row[1]
+    id=row[0]
+    print(id," Nombre: ",nombre)
 
 class LoginPage:
     def __init__(self, window):
         self.window = window
-        self.window.geometry('800x650')
+        self.window.geometry('1300x750')
         self.window.resizable(0, 0)
-        self.window.state('zoomed')
+        
         self.window.title('Pantalla de inicio')
 
         # ========================================================================
@@ -138,8 +157,33 @@ class LoginPage:
 
     def verificar(self):
         usuario = self.username_entry.get()
-        print(usuario)
-        import drowsiness_detection as dw
+        global tipoUser
+        tipoUser=usuario
+        global contra
+        contra = self.password_entry.get()
+        sql='SELECT * FROM '+'"Slave"'+"where"+ '"userSlave"='+"'%s'"
+        base.execute(sql%usuario)
+        user=base.fetchone()
+        print("USUARIO: ",user)
+        sql='SELECT * FROM '+'"Master"'+"where"+ '"userMaster"='+"'%s'"
+        base.execute(sql%usuario)
+        master=base.fetchone()
+        print("MASTER: ",master)
+        if(user==None and master==None):
+            print('Usuario no encontrado')
+            MessageBox.showinfo("Error!", "Usuario: "+ usuario +" no encontrado") # título, mensaje
+            
+        else:
+            if(master!= None and master[3]==contra):
+                self.window.destroy()
+                master = Master()
+                master.mainloop()
+                
+            elif(user!= None and user[3]==contra):
+                self.window.destroy()
+            else:
+                MessageBox.showinfo("Error!", "Contraseña Incorrecta") # título, mensaje
+        
         #drowsiness_detection()
 
 def page():
@@ -150,3 +194,9 @@ def page():
 
 if __name__ == '__main__':
     page()
+
+def obtenerUsuario():
+    return tipoUser
+
+def obtenerContraseña():
+    return contra
