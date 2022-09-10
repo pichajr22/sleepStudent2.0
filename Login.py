@@ -129,6 +129,16 @@ class LoginPage:
         self.password_icon_label = Label(self.lgn_frame, image=photo, bg='#040405')
         self.password_icon_label.image = photo
         self.password_icon_label.place(x=550, y=414)
+
+        # =========== Sign Up ==================================================
+        self.sign_label = Label(self.lgn_frame, text='Sin cuenta aún?', font=("yu gothic ui", 11, "bold"),
+                                relief=FLAT, borderwidth=0, background="#040405", fg='white')
+        self.sign_label.place(x=550, y=560)
+
+        self.signup_img = ImageTk.PhotoImage(file='imagenes\\register.png')
+        self.signup_button_label = Button(self.lgn_frame, image=self.signup_img, bg='#98a65d', cursor="hand2",
+                                          borderwidth=0, background="#040405", activebackground="#040405", command=self.register)
+        self.signup_button_label.place(x=670, y=555, width=111, height=35)
         # ========= show/hide password ==================================================================
         self.show_image = ImageTk.PhotoImage \
             (file='imagenes\\show.png')
@@ -140,6 +150,7 @@ class LoginPage:
                                   activebackground="white"
                                   , borderwidth=0, background="white", cursor="hand2")
         self.show_button.place(x=860, y=420)
+
 
     def show(self):
         self.hide_button = Button(self.lgn_frame, image=self.hide_image, command=self.hide, relief=FLAT,
@@ -154,6 +165,63 @@ class LoginPage:
                                   , borderwidth=0, background="white", cursor="hand2")
         self.show_button.place(x=860, y=420)
         self.password_entry.config(show='*')
+
+    def register(self):
+        #Pantalla
+        mywindow = Tk()
+        mywindow.geometry("550x400")
+        mywindow.title("Registrar usuario")
+        mywindow.resizable(False, False)
+        mywindow.config(background="black")
+
+        main_title = Label(text="Python Form | TRUZZ BLOGG", font=("Cambria", 14), bg="#56CD63", fg="black",
+                           width="500",
+                           height="2")
+        main_title.pack()
+
+        # Define Label Fields
+        self.username_label = Label(mywindow, text="USERNAME", bg="#040405", fg="white",
+                                    font=("yu gothic ui", 13, "bold"))
+        self.username_label.place(x=22, y=70)
+        self.password_label = Label(mywindow, text="PASSWORD", bg="#040405", fg="white",
+                                    font=("yu gothic ui", 13, "bold"))
+        self.password_label.place(x=22, y=130)
+        self.fullname_label = Label(mywindow, text="NOMBRE COMPLETO", bg="#040405", fg="white",
+                                    font=("yu gothic ui", 13, "bold"))
+        self.fullname_label.place(x=22, y=190)
+        self.rol_label = Label(mywindow, text="ROL DEL USUARIO", bg="#040405", fg="white",
+                                    font=("yu gothic ui", 13, "bold"))
+        self.rol_label.place(x=22, y=250)
+
+        # Obtengo los datos
+        username = StringVar()
+        password = StringVar()
+        fullname = StringVar()
+        rol = StringVar()
+
+        username = Entry(mywindow, textvariable=username, width="40")
+        password = Entry(mywindow, textvariable=password, width="40", show="*")
+        fullname = Entry(mywindow, textvariable=fullname, width="40")
+        rol= Entry(mywindow, textvariable=rol, width="40")
+
+        username.place(x=22, y=100)
+        password.place(x=22, y=160)
+        fullname.place(x=22, y=220)
+        rol.place(x=22, y=280)
+
+        #método para obtener datos
+        def send_data():
+            username_info = username.get()
+            password_info = password.get()
+            fullname_info = fullname.get()
+            rol_info = rol.get()
+            print(username_info, "\t", password_info, "\t", fullname_info, "\t", rol_info)
+            print("Usuario registrado.")
+
+        # Submit Button
+        submit_btn = Button(mywindow, text="Agregar usuario", width="25", height="2", command=send_data, bg="#56CD63")
+        submit_btn.place(x=22, y=320)
+        mywindow.mainloop()
 
     def verificar(self):
         usuario = self.username_entry.get()
