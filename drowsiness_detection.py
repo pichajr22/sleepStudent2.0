@@ -261,9 +261,8 @@ class Editor(tk.Tk):
                 score=score-1
                 cv2.putText(frame,"Abierto",(10,height-20), font, 1,(255,255,255),1,cv2.LINE_AA)
             
-                
-            if(score<0):
-                global reproduciendo
+
+            if(score==5):
                 global conn
                 global base
                 sql='UPDATE '+'"Attention"'+"set"+ '"attentionSlave"='+"'Si' WHERE "+'"idAttention"=%d'
@@ -272,6 +271,10 @@ class Editor(tk.Tk):
                 print("CMABIO")
                 
                 conn.commit()
+
+            if(score<0):
+                global reproduciendo
+
                 reproduciendo=False
                 score=0   
             cv2.putText(frame,'Conteo:'+str(score),(150,height-20), font, 1,(255,255,255),1,cv2.LINE_AA)
