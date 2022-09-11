@@ -137,7 +137,7 @@ class LoginPage:
 
         self.signup_img = ImageTk.PhotoImage(file='imagenes\\register.png')
         self.signup_button_label = Button(self.lgn_frame, image=self.signup_img, bg='#98a65d', cursor="hand2",
-                                          borderwidth=0, background="#040405", activebackground="#040405", command=self.register)
+                                          borderwidth=0, background="#040405", activebackground="#040405", command=self.TipoRol)
         self.signup_button_label.place(x=670, y=555, width=111, height=35)
         # ========= show/hide password ==================================================================
         self.show_image = ImageTk.PhotoImage \
@@ -166,11 +166,90 @@ class LoginPage:
         self.show_button.place(x=860, y=420)
         self.password_entry.config(show='*')
 
-    def register(self):
+
+         #Indica el tipo de usuario a registrarse
+    def TipoRol(self):
+        mywindow = Tk()
+        mywindow.geometry("300x180")
+        mywindow.title("Tipo Usuario")
+        mywindow.resizable(False, False)
+        mywindow.config(background="black")
+        self.username_label = Label(mywindow, text="ELIJA SU ROL:", bg="#040405", fg="white",
+                                    font=("yu gothic ui", 13, "bold"))
+        self.username_label.place(x=22, y=15)
+        submit_btn = Button(mywindow, text="SOY ESTUDIANTE! ", width="25", height="2", command=self.registerEstudiante, bg="#56CD63")
+        submit_btn.place(x=22, y=70)
+        submit_btn2 = Button(mywindow, text="SOY PROFESOR! ", width="25", height="2", command=self.registerProfesor,
+                            bg="#56CD63")
+        submit_btn2.place(x=22, y=120)
+
+        #Interfaz de registro de usuario
+    def registerEstudiante(self):
+        #Pantalla
+        mywindow2 = Tk()
+        mywindow2.geometry("550x400")
+        mywindow2.title("Registro de estudiante")
+        mywindow2.resizable(False, False)
+        mywindow2.config(background="black")
+
+        main_title = Label(text="Python Form | TRUZZ BLOGG", font=("Cambria", 14), bg="#56CD63", fg="black",
+                           width="500",
+                           height="2")
+        main_title.pack()
+
+        # Define Label Fields
+        self.username_label = Label(mywindow2, text="               REGISTRO DE ESTUDIANTE", bg="#040405", fg="white",
+                                    font=("yu gothic ui", 13, "bold"))
+        self.username_label.place(x=22, y=30)
+        self.username_label = Label(mywindow2, text="Username", bg="#040405", fg="white",
+                                    font=("yu gothic ui", 13, "bold"))
+        self.username_label.place(x=22, y=70)
+        self.password_label = Label(mywindow2, text="Password", bg="#040405", fg="white",
+                                    font=("yu gothic ui", 13, "bold"))
+        self.password_label.place(x=22, y=130)
+        self.fullname_label = Label(mywindow2, text="Nombre completo", bg="#040405", fg="white",
+                                    font=("yu gothic ui", 13, "bold"))
+        self.fullname_label.place(x=22, y=190)
+        self.rol_label = Label(mywindow2, text="Clave de ingreso para la clase", bg="#040405", fg="white",
+                                    font=("yu gothic ui", 13, "bold"))
+        self.rol_label.place(x=22, y=250)
+
+        # Obtengo los datos
+        username = StringVar()
+        password = StringVar()
+        fullname = StringVar()
+        clave = StringVar()
+
+        username = Entry(mywindow2, textvariable=username, width="40")
+        password = Entry(mywindow2, textvariable=password, width="40", show="*")
+        fullname = Entry(mywindow2, textvariable=fullname, width="40")
+        clave= Entry(mywindow2, textvariable=clave, width="40")
+
+        username.place(x=22, y=100)
+        password.place(x=22, y=160)
+        fullname.place(x=22, y=220)
+        clave.place(x=22, y=280)
+
+        #método para obtener datos
+        def send_data():
+            username_info = username.get()
+            password_info = password.get()
+            fullname_info = fullname.get()
+            clave_info = clave.get()
+            print(username_info, "\t", password_info, "\t", fullname_info, "\t", clave_info)
+            print("Estudiante registrado.")
+
+        # Boton de registro
+        submit_btn = Button(mywindow2, text="REGISTRARSE", width="25", height="2", command=send_data, bg="#56CD63",font=("yu gothic ui", 13, "bold"))
+        submit_btn.place(x=22, y=320)
+        mywindow2.mainloop()
+
+    #Interfaz de registro de profesor
+    def registerProfesor(self):
         #Pantalla
         mywindow = Tk()
         mywindow.geometry("550x400")
-        mywindow.title("Registrar usuario")
+        mywindow.title("Registro de docente")
         mywindow.resizable(False, False)
         mywindow.config(background="black")
 
@@ -180,16 +259,19 @@ class LoginPage:
         main_title.pack()
 
         # Define Label Fields
-        self.username_label = Label(mywindow, text="USERNAME", bg="#040405", fg="white",
+        self.username_label = Label(mywindow, text="                          REGISTRO DE DOCENTE", bg="#040405", fg="white",
+                                    font=("yu gothic ui", 13, "bold"))
+        self.username_label.place(x=22, y=30)
+        self.username_label = Label(mywindow, text="Username", bg="#040405", fg="white",
                                     font=("yu gothic ui", 13, "bold"))
         self.username_label.place(x=22, y=70)
-        self.password_label = Label(mywindow, text="PASSWORD", bg="#040405", fg="white",
+        self.password_label = Label(mywindow, text="Password", bg="#040405", fg="white",
                                     font=("yu gothic ui", 13, "bold"))
         self.password_label.place(x=22, y=130)
-        self.fullname_label = Label(mywindow, text="NOMBRE COMPLETO", bg="#040405", fg="white",
+        self.fullname_label = Label(mywindow, text="Nombre completo", bg="#040405", fg="white",
                                     font=("yu gothic ui", 13, "bold"))
         self.fullname_label.place(x=22, y=190)
-        self.rol_label = Label(mywindow, text="ROL DEL USUARIO", bg="#040405", fg="white",
+        self.rol_label = Label(mywindow, text="Crear clave para la clase:", bg="#040405", fg="white",
                                     font=("yu gothic ui", 13, "bold"))
         self.rol_label.place(x=22, y=250)
 
@@ -197,29 +279,29 @@ class LoginPage:
         username = StringVar()
         password = StringVar()
         fullname = StringVar()
-        rol = StringVar()
+        clave = StringVar()
 
         username = Entry(mywindow, textvariable=username, width="40")
         password = Entry(mywindow, textvariable=password, width="40", show="*")
         fullname = Entry(mywindow, textvariable=fullname, width="40")
-        rol= Entry(mywindow, textvariable=rol, width="40")
+        clave= Entry(mywindow, textvariable=clave, width="40", show="*")
 
         username.place(x=22, y=100)
         password.place(x=22, y=160)
         fullname.place(x=22, y=220)
-        rol.place(x=22, y=280)
+        clave.place(x=22, y=280)
 
         #método para obtener datos
         def send_data():
             username_info = username.get()
             password_info = password.get()
             fullname_info = fullname.get()
-            rol_info = rol.get()
-            print(username_info, "\t", password_info, "\t", fullname_info, "\t", rol_info)
-            print("Usuario registrado.")
+            clave_info =clave.get()
+            print(username_info, "\t", password_info, "\t", fullname_info, "\t", clave_info)
+            print("Docente registrado.")
 
-        # Submit Button
-        submit_btn = Button(mywindow, text="Agregar usuario", width="25", height="2", command=send_data, bg="#56CD63")
+        # Boton de registro
+        submit_btn = Button(mywindow, text="REGISTRARSE", width="22", height="1", command=send_data, bg="#56CD63",font=("yu gothic ui", 10, "bold"))
         submit_btn.place(x=22, y=320)
         mywindow.mainloop()
 
